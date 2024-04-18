@@ -78,9 +78,14 @@ def initScreen():
     screen.fill(WHITE)
     screen.blit(car,(500,100))
     font = pygame.font.Font(None, 60)
-    text = font.render("Press Enter to Start", True, BLACK)
-    text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-    screen.blit(text, text_rect)
+    title = font.render("Drive 2 Survive", True, BLACK)
+    title_rect = title.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+    screen.blit(title, title_rect)
+    
+    subtitle_font =  pygame.font.Font("fonts/Pixeltype-2.ttf", 30)
+    subtitle = subtitle_font.render("Press ENTER to start game", True, BLACK)
+    subtitle_rect = subtitle.get_rect(center=(600, 600))
+    screen.blit(subtitle, subtitle_rect)
 
 def gameOverScreen():
      screen.fill(RED)

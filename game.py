@@ -3,10 +3,14 @@ import time
 from sys import exit
 pygame.init()
 
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 720
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 800
 SPEED = 5
 FLOOR_Y = 625
+JUMP_FRAMES = 46
+JUMP_HEIGHT_FACTOR = 0.1
+
+INIT_JUMP_COUNT = JUMP_FRAMES/2
 
 RED   = (255, 0, 0)
 
@@ -36,22 +40,21 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load("images/Player.jpg")
         self.rect = self.image.get_rect()
         self.rect.center = (self.rect.width / 2, FLOOR_Y)
+        self.isJumping = False
+        self.jumpCount = INIT_JUMP_COUNT
         
     def move(self):
         pressed_keys = pygame.key.get_pressed()
-        if self.rect.top > 0:
-            if pressed_keys[pygame.K_UP]:
-                self.rect.move_ip(0, -5)
-        if self.rect.bottom < SCREEN_HEIGHT:
-            if pressed_keys[pygame.K_DOWN]:
-                self.rect.move_ip(0,5)
-         
-        #if self.rect.left > 0:
-        #      if pressed_keys[K_LEFT]:
-        #          self.rect.move_ip(-5, 0)
-        #if self.rect.right < SCREEN_WIDTH:        
-        #      if pressed_keys[K_RIGHT]:
-        #          self.rect.move_ip(5, 0)
+        if not self.isJumping:
+            if pressed_keys[pygame.K_UP] or pressed_keys[pygame.K_SPACE]:
+                self.isJumping = True
+        else:
+            if self.jumpCount >= -INIT_JUMP_COUNT:
+                self.rect.y -= (self.jumpCount * abs(self.jumpCount)) * JUMP_HEIGHT_FACTOR
+                self.jumpCount -= 1
+            else: 
+                self.jumpCount = INIT_JUMP_COUNT
+                self.isJumping = False
 
 #Setting up Sprites        
 P1 = Player()

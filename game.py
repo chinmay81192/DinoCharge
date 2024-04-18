@@ -81,7 +81,13 @@ def initScreen():
     screen.blit(text, text_rect)
 
 def gameOverScreen():
-     screen.fill(RED)
+    screen.fill(RED)
+    pygame.display.update()
+    for entity in all_sprites:
+        entity.kill() 
+    time.sleep(2)
+    pygame.quit()
+    exit()
 
 #Keep track of score
 score = 0
@@ -110,12 +116,6 @@ def gameScreen():
     #To be run if collision occurs between Player and Enemy
     if pygame.sprite.spritecollideany(P1, enemies):
         gameOverScreen()
-        pygame.display.update()
-        for entity in all_sprites:
-            entity.kill() 
-        time.sleep(2)
-        pygame.quit()
-        exit()
 
     if P1.isJumping:
         if not scoreCountedThisJump:

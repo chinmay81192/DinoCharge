@@ -22,6 +22,7 @@ clock = pygame.time.Clock()
 
 sky = pygame.image.load("images/sky.jpeg").convert()
 ground = pygame.image.load("images/ground.png").convert()
+car = pygame.image.load("images/car1.jpeg").convert()
 # cactus = pygame.image.load("images/cactus.tiff").convert()
 
 class Enemy(pygame.sprite.Sprite):
@@ -75,19 +76,14 @@ all_sprites.add(E2)
 
 def initScreen():
     screen.fill(WHITE)
+    screen.blit(car,(500,100))
     font = pygame.font.Font(None, 60)
     text = font.render("Press Enter to Start", True, BLACK)
     text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
     screen.blit(text, text_rect)
 
 def gameOverScreen():
-    screen.fill(RED)
-    pygame.display.update()
-    for entity in all_sprites:
-        entity.kill() 
-    time.sleep(2)
-    pygame.quit()
-    exit()
+     screen.fill(RED)
 
 #Keep track of score
 score = 0
@@ -116,6 +112,12 @@ def gameScreen():
     #To be run if collision occurs between Player and Enemy
     if pygame.sprite.spritecollideany(P1, enemies):
         gameOverScreen()
+        pygame.display.update()
+        for entity in all_sprites:
+            entity.kill() 
+        time.sleep(2)
+        pygame.quit()
+        exit()
 
     if P1.isJumping:
         if not scoreCountedThisJump:

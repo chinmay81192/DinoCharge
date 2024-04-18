@@ -89,15 +89,20 @@ def gameOverScreen():
     pygame.quit()
     exit()
 
+def collidingOnVerticalAxis(s1, s2):
+    rect = s2.rect.copy()
+    rect.y = s1.rect.y
+    return s1.rect.colliderect(rect)
+
 #Keep track of score
 score = 0
-scoreCountedThisJump = False
-incrementScore = False
+passingThroughEnemy = False
+enemyBeingPassed = E1
 
 def gameScreen():
     global score
-    global scoreCountedThisJump
-    global incrementScore
+    global passingThroughEnemy
+    global enemyBeingPassed
 
     screen.blit(sky,(0,0)) 
     screen.blit(ground,(0,700))
@@ -117,20 +122,16 @@ def gameScreen():
     if pygame.sprite.spritecollideany(P1, enemies):
         gameOverScreen()
 
-    if P1.isJumping:
-        if not scoreCountedThisJump:
-            for enemy in enemies:
-                rect = enemy.rect.copy()
-                rect.y = P1.rect.y
-                if P1.rect.colliderect(rect):
-                    incrementScore = True
-                    scoreCountedThisJump = True
-                    break
+    if not passingThroughEnemy:
+        for enemy in enemies:
+            if collidingOnVerticalAxis(P1, enemy):
+                passingThroughEnemy = True
+                enemyBeingPassed = enemy
+                break
     else:
-        scoreCountedThisJump = False
-        if incrementScore:
+        if not collidingOnVerticalAxis(P1, enemyBeingPassed):
             score += 1
-            incrementScore = False
+            passingThroughEnemy = False
 
 #Adding a new User event 
 INC_SPEED = pygame.USEREVENT + 1

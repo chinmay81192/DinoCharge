@@ -88,7 +88,11 @@ def initScreen():
     screen.blit(subtitle, subtitle_rect)
 
 def gameOverScreen():
-     screen.fill(RED)
+    screen.fill(WHITE)
+    subtitle_font =  pygame.font.Font("fonts/Pixeltype-2.ttf", 60)
+    subtitle = subtitle_font.render("GAME OVER", True, BLACK)
+    subtitle_rect = subtitle.get_rect(center=(600, 300))
+    screen.blit(subtitle, subtitle_rect)
 
 def collidingOnVerticalAxis(s1, s2):
     rect = s2.rect.copy()
@@ -112,7 +116,7 @@ def gameScreen():
     # Draw score
     font = pygame.font.Font(None, 25)
     text = font.render("Score: " + str(score), True, BLACK)
-    text_rect = text.get_rect(topright=(SCREEN_WIDTH, 0))
+    text_rect = text.get_rect(topright=(SCREEN_WIDTH - 20, 10))
     screen.blit(text, text_rect)
     
     #Moves and Re-draws all Sprites

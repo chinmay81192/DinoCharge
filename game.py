@@ -140,7 +140,7 @@ onGameScreen = False
 
 while True:
     for event in pygame.event.get():
-        if not onGameScreen and event.type == INC_SPEED:
+        if  onGameScreen and event.type == INC_SPEED:
             SPEED += 2
 
         if event.type == pygame.QUIT:

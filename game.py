@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__() 
         self.image = pygame.image.load("images/mclaren.png").convert_alpha()
         self.rect = self.image.get_rect()
-        self.rect.center = (self.rect.width / 2, 690)
+        self.rect.center = (self.rect.width / 2 + 100, 690)
         self.isJumping = False
         self.jumpCount = INIT_JUMP_COUNT
         
@@ -63,7 +63,7 @@ class Player(pygame.sprite.Sprite):
 #Setting up Sprites        
 P1 = Player()
 E1 = Enemy("images/cactus.tiff",1300,665)
-E2 = Enemy("images/vulture.png",1500,200)
+E2 = Enemy("images/vulture.png",2100,200)
  
 #Creating Sprites Groups
 enemies = pygame.sprite.Group()
@@ -88,12 +88,18 @@ def initScreen():
     screen.blit(subtitle, subtitle_rect)
 
 def gameOverScreen():
+    global score
     screen.fill(WHITE)
     subtitle_font =  pygame.font.Font("fonts/Pixeltype-2.ttf", 60)
     subtitle = subtitle_font.render("GAME OVER", True, BLACK)
-    subtitle_rect = subtitle.get_rect(center=(600, 300))
+    subtitle_rect = subtitle.get_rect(center=(600, 400))
     screen.blit(subtitle, subtitle_rect)
-
+    text_font =  pygame.font.Font(None, 30)
+    text = text_font.render("Score: " + str(score),True,BLACK)
+    text_rect = text.get_rect(center=(600, 550))
+    screen.blit(text, text_rect)
+    
+    
 def collidingOnVerticalAxis(s1, s2):
     rect = s2.rect.copy()
     rect.y = s1.rect.y
@@ -130,9 +136,9 @@ def gameScreen():
         pygame.display.update()
         for entity in all_sprites:
             entity.kill() 
-        time.sleep(2)
+        time.sleep(5)
         pygame.quit()
-        exit()
+        #exit()
 
     if not passingThroughEnemy:
         for enemy in enemies:
@@ -143,8 +149,8 @@ def gameScreen():
     else:
         if not collidingOnVerticalAxis(P1, enemyBeingPassed):
             score += 1
-            if score % 5 == 0:
-                SPEED += 1
+            if score % 2 == 0:
+                SPEED += 2
             passingThroughEnemy = False
 
 onGameScreen = False

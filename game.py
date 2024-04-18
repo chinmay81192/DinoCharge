@@ -103,6 +103,7 @@ def gameScreen():
     global score
     global passingThroughEnemy
     global enemyBeingPassed
+    global SPEED
 
     screen.blit(sky,(0,0)) 
     screen.blit(ground,(0,700))
@@ -131,19 +132,14 @@ def gameScreen():
     else:
         if not collidingOnVerticalAxis(P1, enemyBeingPassed):
             score += 1
+            if score % 5 == 0:
+                SPEED += 1
             passingThroughEnemy = False
-
-#Adding a new User event 
-INC_SPEED = pygame.USEREVENT + 1
-pygame.time.set_timer(INC_SPEED, 1000)
 
 onGameScreen = False
 
 while True:
     for event in pygame.event.get():
-        if  onGameScreen and event.type == INC_SPEED:
-            SPEED += 2
-
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()

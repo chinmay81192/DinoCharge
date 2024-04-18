@@ -14,6 +14,7 @@ INIT_JUMP_COUNT = JUMP_FRAMES/2
 
 RED   = (255, 0, 0)
 BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 pygame.display.set_caption("GAME")
@@ -68,23 +69,25 @@ all_sprites = pygame.sprite.Group()
 all_sprites.add(P1)
 all_sprites.add(E1)
 
-#Adding a new User event 
-INC_SPEED = pygame.USEREVENT + 1
-pygame.time.set_timer(INC_SPEED, 1000)
+def initScreen():
+    screen.fill(WHITE)
+    font = pygame.font.Font(None, 60)
+    text = font.render("Press Enter to Start", True, BLACK)
+    text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+    screen.blit(text, text_rect)
+
+def gameOverScreen():
+     screen.fill(RED)
 
 #Keep track of score
 score = 0
 scoreCountedThisJump = False
 incrementScore = False
 
-while True:
-    for event in pygame.event.get():
-        if event.type == INC_SPEED:
-            SPEED += 2
-
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
+def gameScreen():
+    global score
+    global scoreCountedThisJump
+    global incrementScore
 
     screen.blit(test_sky,(0,0)) 
     screen.blit(test_ground,(0,700))
@@ -102,7 +105,7 @@ while True:
  
     #To be run if collision occurs between Player and Enemy
     if pygame.sprite.spritecollideany(P1, enemies):
-        screen.fill(RED)
+        gameOverScreen()
         pygame.display.update()
         for entity in all_sprites:
             entity.kill() 
@@ -124,6 +127,29 @@ while True:
         if incrementScore:
             score += 1
             incrementScore = False
+
+#Adding a new User event 
+INC_SPEED = pygame.USEREVENT + 1
+pygame.time.set_timer(INC_SPEED, 1000)
+
+onGameScreen = False
+
+while True:
+    for event in pygame.event.get():
+        if not onGameScreen and event.type == INC_SPEED:
+            SPEED += 2
+
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+
+    if not onGameScreen:
+        initScreen()
+        pressed_keys = pygame.key.get_pressed()
+        if pressed_keys[pygame.K_RETURN]:
+            onGameScreen = True
+    else:
+        gameScreen()
 
     pygame.display.update()
     clock.tick(60)

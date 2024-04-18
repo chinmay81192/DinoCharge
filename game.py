@@ -7,12 +7,13 @@ SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 800
 SPEED = 5
 FLOOR_Y = 625
-JUMP_FRAMES = 46
-JUMP_HEIGHT_FACTOR = 0.1
+JUMP_FRAMES = 60
+JUMP_HEIGHT_FACTOR = 0.05
 
 INIT_JUMP_COUNT = JUMP_FRAMES/2
 
 RED   = (255, 0, 0)
+BLACK = (0, 0, 0)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 pygame.display.set_caption("GAME")
@@ -71,6 +72,11 @@ all_sprites.add(E1)
 INC_SPEED = pygame.USEREVENT + 1
 pygame.time.set_timer(INC_SPEED, 1000)
 
+#Keep track of score
+score = 0
+scoreCountedThisJump = False
+incrementScore = False
+
 while True:
     for event in pygame.event.get():
         if event.type == INC_SPEED:
@@ -82,6 +88,12 @@ while True:
 
     screen.blit(test_sky,(0,0)) 
     screen.blit(test_ground,(0,700))
+
+    # Draw score
+    font = pygame.font.Font(None, 25)
+    text = font.render("Score: " + str(score), True, BLACK)
+    text_rect = text.get_rect(topright=(SCREEN_WIDTH, 0))
+    screen.blit(text, text_rect)
     
     #Moves and Re-draws all Sprites
     for entity in all_sprites:
@@ -90,13 +102,28 @@ while True:
  
     #To be run if collision occurs between Player and Enemy
     if pygame.sprite.spritecollideany(P1, enemies):
-          screen.fill(RED)
-          pygame.display.update()
-          for entity in all_sprites:
-                entity.kill() 
-          time.sleep(2)
-          pygame.quit()
-          exit()
+        screen.fill(RED)
+        pygame.display.update()
+        for entity in all_sprites:
+            entity.kill() 
+        time.sleep(2)
+        pygame.quit()
+        exit()
+
+    if P1.isJumping:
+        if not scoreCountedThisJump:
+            for enemy in enemies:
+                rect = enemy.rect.copy()
+                rect.y = P1.rect.y
+                if P1.rect.colliderect(rect):
+                    incrementScore = True
+                    scoreCountedThisJump = True
+                    break
+    else:
+        scoreCountedThisJump = False
+        if incrementScore:
+            score += 1
+            incrementScore = False
 
     pygame.display.update()
     clock.tick(60)

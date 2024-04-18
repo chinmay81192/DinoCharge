@@ -38,9 +38,9 @@ class Enemy(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__() 
-        self.image = pygame.image.load("images/Player.jpg")
+        self.image = pygame.image.load("images/mclaren.png").convert_alpha()
         self.rect = self.image.get_rect()
-        self.rect.center = (self.rect.width / 2, FLOOR_Y)
+        self.rect.center = (self.rect.width / 2, 690)
         self.isJumping = False
         self.jumpCount = INIT_JUMP_COUNT
         
